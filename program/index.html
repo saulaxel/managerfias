@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~grafias</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            /*display: none; */
+        }
+        input[type=search] {
+            -moz-appearance:none;
+            -webkit-appearance:none;
+        }
+
+        .padre {
+            min-height: 100vh;
+        }
+        .center {
+            margin: 0 auto;
+        }
+        .boton-resetear {
+            position: relative;
+        }
+        .boton-resetear::after {
+            content: '⟳';
+            position: absolute;
+
+            top: -18px;
+            left: 17px;
+
+            font-size: 2.5em;
+        }
+
+        .tache {
+            position: absolute;
+            top: -10px;
+            right: 22px;
+            font-size: 2em;
+
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="margin-top: 2em"></div>
+
+        <div class="row">
+            <div class="col">
+                <input type="search" list="grafias"
+                        class="form-control"
+                        id="texto">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="center">
+                <button type="button" class="btn btn-primary" onclick="aniadir()">Añadir</button>
+                <button type="button" class="btn btn-secondary boton-resetear" onclick="resetearElegidas()">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </button>
+            </div>
+        </div>
+
+        <div class="row text-white">
+            <div class="col" id="sugerencias">
+
+            </div>
+            <div class="col" id="elegidas">
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

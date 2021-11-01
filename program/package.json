@@ -1,0 +1,12 @@
+{
+  "name": "monografias",
+  "version": "1.0.0",
+  "description": "busca títulos de monografías",
+  "main": "main.js",
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
