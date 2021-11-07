@@ -2583,14 +2583,10 @@ const actualizarGrafias = function(evento) {
 
     // No se modificó el texto, se presionaron las flechas del teclado
     if (evento.keyCode == FLECHA_ARRIBA) {
-        evento.preventDefault();
-        moverSeleccionArriba();
         return;
     }
 
     if (evento.keyCode == FLECHA_ABAJO) {
-        evento.preventDefault();
-        moverSeleccionAbajo();
         return;
     }
 
@@ -2642,19 +2638,21 @@ const actualizarGrafias = function(evento) {
     // Caché
     previousText = texto;
 };
-inputTexto.addEventListener('keydown', actualizarGrafias);
+inputTexto.addEventListener('input', actualizarGrafias);
 
-//inputTexto.addEventListener('keydown', function(evento) {
-//    if (evento.keyCode == FLECHA_ARRIBA) {
-//        evento.preventDefault();
-//        return;
-//    }
-//
-//    if (evento.keyCode == FLECHA_ABAJO) {
-//        evento.preventDefault();
-//        return;
-//    }
-//});
+inputTexto.addEventListener('keydown', function(evento) {
+    if (evento.keyCode == FLECHA_ARRIBA) {
+        evento.preventDefault();
+        moverSeleccionArriba();
+        return;
+    }
+
+    if (evento.keyCode == FLECHA_ABAJO) {
+        evento.preventDefault();
+        moverSeleccionAbajo();
+        return;
+    }
+});
 
 const borrarTexto = function() {
     previousText = "";
