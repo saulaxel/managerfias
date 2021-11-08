@@ -6,6 +6,8 @@
 - Lista de sugerencias que muestra documentos que coinciden con el texto de
     búsqueda y lista de elecciones que guarda los elementos de interés para el
     dependiente
+- Lista incompleta de documentos. Contiene casi todas las monografías, pero no
+    todos los códigos están actualizados
 - Botones para añadir y reiniciar la lista de elecciones
 - La búsqueda responde de forma inmediata al escribir
 - Búsqueda independiente de mayúsculas y minúsculas, de acentos y eñes, y
@@ -19,3 +21,14 @@
     keydown a input en los manejadores del campo de texto
 - Se añaden las palabras "Sugerencias" y "Elegidas" encima de las listas
 - Se coloca un borde alrededor de las listas del punto anterior
+
+## Cosas por hacer
+
+- Completar la lista digital
+- Habilidad para eliminar elementos individuales de la lista de elecciones
+- Cuenta de usuarios
+- Persistencia de los datos de acuerdo a la cuenta de usuario
+- Eliminar letras obsoletas como LL y CH de los índices de documentos
+- Añadir, editar y eliminar elementos de la lista digital directamente desde el
+    sistema
+- Modularización y pruebas de unidad
