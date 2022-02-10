@@ -24,7 +24,8 @@
 
 ## Cosas por hacer
 
-- Completar la lista digital
+- Completar la lista digital.
+- Permitir cambiar entre listas para diferentes locales
 - Habilidad para eliminar elementos individuales de la lista de elecciones
 - Cuenta de usuarios
 - Persistencia de los datos de acuerdo a la cuenta de usuario
@@ -32,3 +33,5 @@
 - Añadir, editar y eliminar elementos de la lista digital directamente desde el
     sistema
 - Modularización y pruebas de unidad
+- En los resultados debe haber un aviso cuando la monografía comparte número
+    con otra no relacionada
