@@ -1,3 +1,6 @@
+scanned_images/
+__pycache__
+
 # Logs
 logs
 *.log

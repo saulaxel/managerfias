@@ -22,6 +22,12 @@
 - Se añaden las palabras "Sugerencias" y "Elegidas" encima de las listas
 - Se coloca un borde alrededor de las listas del punto anterior
 
+## Recolección de imágenes de las monografías
+
+- Sin cambios razonables en el código de la aplicación
+- Se escanearon todas las monografías por ambos lados y se extrajeron todas sus
+    imágenes
+
 ## Cosas por hacer
 
 - Completar la lista digital.
