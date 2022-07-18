@@ -1,0 +1,2 @@
+from pyimagesearch.redes_neuronales.perceptron import Perceptron
+from pyimagesearch.redes_neuronales.densa import Densa

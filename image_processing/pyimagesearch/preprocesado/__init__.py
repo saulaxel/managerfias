@@ -1,0 +1,1 @@
+from pyimagesearch.preprocesado.redimensionar import Redimensionar
