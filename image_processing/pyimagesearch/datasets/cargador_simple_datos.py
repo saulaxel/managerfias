@@ -13,7 +13,7 @@ class CargadorSimpleDatos:
         if self.preprocesadores is None:
             self.preprocesadores = []
 
-    def load(self, rutas_imagenes, verboso=-1):
+    def cargar(self, rutas_imagenes, verboso=-1):
         datos = []
         etiquetas = []
 

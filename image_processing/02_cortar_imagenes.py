@@ -43,7 +43,7 @@ def main():
     for raiz, directorios, archivos in os.walk(ruta_entrada):
         # Solo se toman en cuenta carpetas sin subdirectorios (el fondo
         # de la estructura de carpetas) para no tomar en cuenta la ruta que
-        # contiene al resto
+        # principal (la que contiene al resto)
         if not directorios:
             # Los archivos están numerados 0.jpeg, 1.pjeg, 2.jpeg...,
             # y así sucesivamente. El orden lexicográfico es tiene relevancia
