@@ -10,3 +10,6 @@ def crear_directorio_si_no_existe(nombre):
 def extraer_nombre_base(archivo):
     return os.path.basename(archivo).split('.')[0]
 
+
+def extraer_extension(archivo):
+    return os.path.basename(archivo).split('.')[1]

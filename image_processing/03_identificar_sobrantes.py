@@ -16,15 +16,19 @@ import cv2
 import os
 import os.path
 import numpy as np
+import re
+import shutil
+
 from glob import glob
 from argparse import ArgumentParser
 from imutils import paths
 from sklearn.model_selection import train_test_split
+from enum import Enum
 
 from utils.sistema_archivos import crear_directorio_si_no_existe
 from utils.sistema_archivos import extraer_nombre_base
-from utils.imagenes import aplanar
-from utils.imagenes import normalizar
+from utils.sistema_archivos import extraer_extension
+from utils import imagenes
 
 from pyimagesearch.datasets.cargador_simple_datos import CargadorSimpleDatos
 
@@ -34,8 +38,8 @@ corte_vertical = slice(936, -1)
 # Funcionalidad central
 class ClasificadorPromedio:
     def __init__(self):
-        self.promedios: dict[float] = {}
-        self.cantidades: dict[int] = {}
+        self.promedios: dict[any, float] = {}
+        self.cantidades: dict[any, int] = {}
 
     def entrenar(self, datos, etiquetas):
         for dato, etiqueta in zip(datos, etiquetas):
@@ -90,16 +94,6 @@ class ClasificadorPromedio:
 
         return nuevo
 
-
-def cargar_imagen(nombre_archivo):
-    imagen = cv2.imread(nombre_archivo)
-    return imagen
-
-def aplanar_unica_imagen(imagen):
-    alto, ancho, canales = imagen.shape
-    vector = imagen.reshape(1, alto * ancho * canales)
-    return vector
-
 def redimensionar_uniformemente(imagen, razon):
     alto, ancho, canales = imagen.shape
     alto = int(alto * razon)
@@ -109,35 +103,60 @@ def redimensionar_uniformemente(imagen, razon):
     return imagen
 
 
-def elegir_sobrante(img_anterior, img_actual, img_siguiente):
-    anterior, actual, siguiente = None, None, None
-    imagenes = ()
 
-    for nombre_imagen in (img_anterior, img_actual, img_siguiente):
+class Eleccion(Enum):
+    NINGUNA = 0
+    ACTUAL = 1
+    ANTERIOR = 2
+    SIGUIENTE = 3
+
+def elegir_sobrante(img_anterior: str, img_actual: str) -> Eleccion:
+    matrices_imagenes = ()
+
+    for nombre_imagen in (img_anterior, img_actual):
         if nombre_imagen is not None:
-            imagen = cargar_imagen(nombre_imagen)
-            imagen = redimensionar_uniformemente(imagen, 0.25)
-            imagenes += (imagen,)
+            imagen = imagenes.cargar(nombre_imagen)
+            imagen = redimensionar_uniformemente(imagen, razon=0.3)
+            matrices_imagenes += (imagen,)
 
-    horizontal = np.concatenate(imagenes, axis=1)
-    cv2.imshow(f'Imagenes {img_anterior} {img_actual} {img_siguiente}',
-            horizontal)
+    horizontal = np.concatenate(matrices_imagenes, axis=1)
+    for mat in matrices_imagenes:
+        print('[DEBUG] ', mat.shape)
+    print('[DEBUG] ', horizontal.shape)
+    cv2.imshow('Imagenes', horizontal)
 
     cv2.waitKey()
     cv2.destroyAllWindows()
 
-    eleccion = int(input('> '))
-    if eleccion == 0:
-        return img_anterior
+    print("Elije la imagen a eliminar: ")
+    print("1) Actual")
+    print("2) Anterior")
+    print("Cualquier otra cosa) Ninguna")
+    eleccion = -1
+    try:
+        eleccion = int(input('> '))
+    except ValueError:
+        pass # Elección no se pudo convertir a entero
+
+
     if eleccion == 1:
-        return img_actual
+        return Eleccion.ACTUAL
     if eleccion == 2:
-        return img_siguiente
+        return Eleccion.ANTERIOR
 
-    return None
+    return Eleccion.NINGUNA
 
 
+def orden_numerico(nombre_archivo):
+    numero, *resto = re.split('[._]', nombre_archivo)
+    return (int(numero), len(nombre_archivo))
 
+
+def alternar_valor(actual, valor1, valor2):
+    if actual == valor1:
+        return valor2
+    else:
+        return valor1
 
 
 FRENTE = 'front'
@@ -204,7 +223,7 @@ def main():
         (datos, etiquetas) = CargadorSimpleDatos().cargar(rutas_imagenes)
 
         # Preparar los datos
-        datos = aplanar(datos)
+        datos = aplanar_imagenes(datos)
 
         # Particionar los datos usando 75% de los datos para entrenamiento y el restante
         # 25% para pruebas
@@ -234,15 +253,25 @@ def main():
         cp = ClasificadorPromedio.cargar('03_promedios_frente_atras.txt')
 
         ruta_entrada = args['ruta_entrada']
+        ruta_salida = args['ruta_salida']
 
+        contador_imagen = 0
+        inicio = False
         for raiz, directorios, archivos in os.walk(ruta_entrada):
             # Solo se toman en cuenta carpetas sin subdirectorios (el fondo
             # de la estructura de carpetas) para no tomar en cuenta la ruta
             # carpeta principal
+
+            if raiz == '../scanned_images/img_cropped/MX-M264N_20220701_140046':
+                inicio = True
+
+            if not inicio:
+                continue
+
             if not directorios:
                 # Los archivos están numerados 0.jpeg, 1.pjeg, 2.jpeg...,
                 # y así sucesivamente. El orden lexicográfico es tiene relevancia
-                archivos.sort()
+                archivos.sort(key=orden_numerico)
 
                 base = extraer_nombre_base(raiz)
 
@@ -254,47 +283,49 @@ def main():
                 while actual < (largo := len(archivos)):
                     img = f'{raiz}/{archivos[actual]}'
                     img_anterior = None
-                    img_siguiente = None
 
                     # Construir rutas
                     if actual - 1 >= 0:
                         img_anterior = f'{raiz}/{archivos[actual - 1]}'
-                    if actual + 1 < largo:
-                        img_siguiente = f'{raiz}/{archivos[actual + 1]}'
 
                     # Obtener la clasificación de la imagen
-                    vector = cargar_imagen(img)
-                    vector = aplanar_unica_imagen(vector)
+                    vector = imagenes.cargar(img)
+                    vector = imagenes.aplanar_una(vector)
 
                     clasificacion = cp.predecir(vector)[0]
 
                     if clasificacion != clasificacion_esperada:
-                        sobrante = elegir_sobrante(img_anterior, img, img_siguiente)
+                        print('[DEBUG] Elegir sobrante entre:\n',
+                              '[DEBUG]', actual, img, '\n',
+                              '[DEBUG]', actual - 1, img_anterior)
+                        sobrante = elegir_sobrante(img_anterior, img)
 
-                        if sobrante is None:
-                            pass
-                        elif sobrante == img_anterior:
-                            del archivos[actual - 1]
+                        if sobrante == Eleccion.ANTERIOR:
+                            # Tenemos que retroceder el índice si se eliminó algo previo
+                            # para no saltarnos una imagen
                             actual -= 1
-                        elif sobrante == img:
+                            del archivos[actual]
+                            clasificacion_esperada = alternar_valor(clasificacion_esperada, FRENTE, REVERSO)
+                        elif sobrante == Eleccion.ACTUAL:
                             del archivos[actual]
                             actual -= 1
-                        else:
-                            del archivos[actual + 1]
+                            clasificacion_esperada = alternar_valor(clasificacion_esperada, FRENTE, REVERSO)
 
-                        # Tenemos que retroceder el índice si se eliminó algo previo
-                        # para no saltarnos una imagen
-                        if sobrante in (img_anterior, img):
-                            actual -= 1
+                    clasificacion_esperada = alternar_valor(clasificacion_esperada, FRENTE, REVERSO)
+                    actual += 1
 
+                if len(archivos) % 2 != 0:
+                    print('[DEBUG] Número impar encontrado, eliminando el último lugar')
+                    print('[DEBUG]', raiz)
+                    del archivos[-1]
+                    input()
 
-                    if clasificacion_esperada == FRENTE:
-                        clasificacion_esperada = REVERSO
-                    else:
-                        clasificacion_esperada = FRENTE
-
-                    actual + 1
-                break
+                for nombre_imagen in archivos:
+                    ruta_actual = f'{raiz}/{nombre_imagen}'
+                    extension = extraer_extension(ruta_actual)
+                    nueva_ruta = f'{ruta_salida}/{contador_imagen}.{extension}'
+                    shutil.copy(ruta_actual, nueva_ruta)
+                    contador_imagen += 1
 
 
 if __name__ == '__main__':

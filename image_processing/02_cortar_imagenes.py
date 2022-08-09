@@ -46,7 +46,7 @@ def main():
         # principal (la que contiene al resto)
         if not directorios:
             # Los archivos están numerados 0.jpeg, 1.pjeg, 2.jpeg...,
-            # y así sucesivamente. El orden lexicográfico es tiene relevancia
+            # y así sucesivamente. El orden lexicográfico tiene relevancia
             # porque los números adyacentes son respectivamente en frente y el
             # reverso de la misma monografía, así que nos aseguramos de
             # preservar dicho orden con el sort()
