@@ -25,7 +25,6 @@ from imutils import paths
 from sklearn.model_selection import train_test_split
 from enum import Enum
 
-from utils.sistema_archivos import crear_directorio_si_no_existe
 from utils.sistema_archivos import extraer_nombre_base
 from utils.sistema_archivos import extraer_extension
 from utils import imagenes

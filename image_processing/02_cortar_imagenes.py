@@ -54,7 +54,8 @@ def main():
 
             base = extraer_nombre_base(raiz)
             nuevo_dir = f'{ruta_salida}/{base}'
-            crear_directorio_si_no_existe(nuevo_dir)
+            if not crear_directorio_si_no_existe(nuevo_dir):
+                print('El directorio ya existía')
 
             for nombre_archivo in archivos:
                 guardar_recorte(nombre_archivo,

@@ -1,7 +1,7 @@
 """
 Extraer imágenes contenidas en un archivo_pdf
 """
-import fitz
+import fitz  # Para manejar el pdf
 from glob import glob
 from PIL import Image
 
@@ -18,7 +18,8 @@ def procesar_pdf(nombre_archivo, ruta_salida):
     archivo_pdf = fitz.open(nombre_archivo)
 
     # Se crea la ruta en la que se colocarán las imágenes
-    crear_directorio_si_no_existe(f'{ruta_salida}/{nombre_base}')
+    if not crear_directorio_si_no_existe(f'{ruta_salida}/{nombre_base}'):
+        print('El directorio ya existía')
 
     # Se guarda cada imagen del pdf
     for i, pagina in enumerate(archivo_pdf):
