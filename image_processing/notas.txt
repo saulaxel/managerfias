@@ -1,0 +1,3 @@
+01_extraer_imagenes_pdf.py
+02_cortar_imagenes.py
+03_identificar_sobrantes.py

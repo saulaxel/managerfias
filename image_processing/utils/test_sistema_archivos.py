@@ -38,3 +38,7 @@ class TestSistemaArchivos(unittest.TestCase):
         self.assertEqual(crear_directorio_si_no_existe(nombre_archivo), True)
         self.assertEqual(crear_directorio_si_no_existe(nombre_archivo), False)
         os.rmdir(nombre_archivo)
+
+    ######################################################################
+    def test_guardar_bytes(self):
+        pass
