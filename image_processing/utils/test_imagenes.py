@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from imagenes import *
+from utils.imagenes import *
 
 class TestImagenes(unittest.TestCase):
     ######################################################################
@@ -43,7 +43,7 @@ class TestImagenes(unittest.TestCase):
 
     ######################################################################
     def test_cargar(self):
-        imagen = cargar('./imagen_prueba.png')
+        imagen = cargar('utils/imagen_prueba.png')
         expected_result = np.array([
                 [[0, 0, 255], [0, 255, 0]],
                 [[255, 0, 0], [255, 255, 255]]

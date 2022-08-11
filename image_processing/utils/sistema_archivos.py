@@ -31,7 +31,7 @@ def extraer_nombre_base(nombre_archivo):
     Regresa el nombre del archivo sin extensión dada una cadena con su ruta
     extraer_nombre_base('/ruta/archivo.txt') -> 'archivo'
     '''
-    return separar_partes_nombre(archivo)[0]
+    return separar_partes_nombre(nombre_archivo)[0]
 
 
 def extraer_extension(nombre_archivo: str):
@@ -47,7 +47,7 @@ def extraer_extension(nombre_archivo: str):
     return partes[-1]
 
 
-def guardar_bytes(nombre_archivo, bytes_a_guardar):
+def guardar_bytes(nombre_archivo: str, bytes_a_guardar: bytes):
     '''
     Abre un archivo en modo de escritura binaria para guardar en los bytes
     pasados como parámetro

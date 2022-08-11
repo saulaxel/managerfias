@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 
-from sistema_archivos import *
+from utils.sistema_archivos import *
 
 class TestSistemaArchivos(unittest.TestCase):
     ######################################################################
@@ -41,4 +41,13 @@ class TestSistemaArchivos(unittest.TestCase):
 
     ######################################################################
     def test_guardar_bytes(self):
-        pass
+        datos_originales = b'0x10x20x30x4'
+        archi = 'test-guardar-bytes.txt'
+        guardar_bytes(archi, datos_originales)
+
+        with open(archi, 'rb') as f:
+            datos_recuperados = f.read()
+
+        self.assertEqual(datos_originales, datos_recuperados)
+        os.remove('test-guardar-bytes.txt')
+

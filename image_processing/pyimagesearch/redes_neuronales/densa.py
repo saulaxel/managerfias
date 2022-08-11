@@ -5,7 +5,7 @@ activación sigmoide
 import numpy as np
 from numpy.random import randn
 
-class RedNeuronalDensa:
+class Densa:
     def __init__(self, capas, alpha=0.1, pesos=None):
         # Lista de matrices de pesos, la arquitectura de red y guardar la
         # arquitectura de red y taza de aprendizaje
