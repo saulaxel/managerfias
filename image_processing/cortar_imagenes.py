@@ -1,31 +1,29 @@
 """
 Cortar la parte relevante de la imagen escaneada
 """
-import cv2
 import os
 from glob import glob
 from argparse import ArgumentParser
 
+import utils.imagenes as imagenes
 from utils import crear_directorio_si_no_existe
 from utils import extraer_nombre_base
 
-corte_horizontal = slice(0, 1774)
-corte_vertical = slice(936, -1)
+corte_vertical = slice(0, 1774)
+corte_horizontal = slice(936, None) # None = Hasta el final
 
 # Funcionalidad central
 
-def guardar_recorte(nombre_archivo, ruta_archivo='.', ruta_salida='.'):
+def cargar_recortar_y_guardar(nombre_archivo, ruta_archivo, ruta_salida):
     ruta_completa = f'{ruta_archivo}/{nombre_archivo}'
-    imagen = cv2.imread(ruta_completa)
+    imagen = imagenes.cargar(ruta_completa)
 
     if imagen is None:
         raise EnvironmentError('No se pudo abrir la imagen')
 
-    # Se corta la imagen
-    imagen_cortada = imagen[corte_horizontal, corte_vertical]
+    imagen_cortada = imagenes.recortar(corte_vertical, corte_horizontal)
 
-    # Guardando resultados
-    cv2.imwrite(f'{ruta_salida}/{nombre_archivo}', imagen_cortada)
+    imagen.guardar(f'{ruta_salida}/{nombre_archivo}', imagen_cortada)
 
 # Programa principal
 def main():
@@ -58,9 +56,9 @@ def main():
                 print('El directorio ya existía')
 
             for nombre_archivo in archivos:
-                guardar_recorte(nombre_archivo,
-                                ruta_archivo=raiz,
-                                ruta_salida=nuevo_dir)
+                cargar_recortar_y_guardar(nombre_archivo,
+                                          ruta_archivo=raiz,
+                                          ruta_salida=nuevo_dir)
 
 if __name__ == '__main__':
     main()

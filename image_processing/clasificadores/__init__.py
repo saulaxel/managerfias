@@ -1,0 +1,1 @@
+from clasificadores.clasificador_promedio import ClasificadorPromedio
