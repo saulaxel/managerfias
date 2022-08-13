@@ -12,12 +12,12 @@ class TestImagenes(unittest.TestCase):
                 [[1, 1, 1], [2, 2, 2]],
                 [[3, 3, 3], [4, 4, 4]]
             ])
-        expected_result = np.array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4])
+        expected_result = np.array([[1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4]])
         self.assertTrue(np.array_equal(aplanar_una(test_image), expected_result))
 
     def test_aplanar_una_acepta_un_solo_pixel(self):
         imagen = np.array([[[1, 1, 1]]])
-        esperado = np.array([1, 1, 1])
+        esperado = np.array([[1, 1, 1]])
         self.assertTrue(np.array_equal(aplanar_una(imagen), esperado))
 
     ######################################################################
@@ -124,7 +124,7 @@ class TestImagenes(unittest.TestCase):
         self.assertTrue(np.array_equal(resultado5, esperado5))
 
     ######################################################################
-    def test_redimensionar_uniformemente(self):
+    def test_redimensionar_uniformemente_achica_correctamente(self):
         imagen = np.array([
                 [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
                 [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
@@ -132,6 +132,28 @@ class TestImagenes(unittest.TestCase):
                 [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
             ], dtype='uint8')
         nueva = redimensionar_uniformemente(imagen, 0.5)
+
+        self.assertEqual(nueva.shape, (2, 2, 3))
+
+        imagen2 = np.array([
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]]
+            ], dtype='uint8')
+        nueva2 = redimensionar_uniformemente(imagen2, 0.5)
+        self.assertEqual(nueva2.shape, (2, 1, 3))
+
+    def test_redimensionar_uniformemente_agranda_correctamente(self):
+        imagen = np.array([
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]],
+                [[0, 0, 0], [0, 0, 0]]
+            ], dtype='uint8')
+        nueva = redimensionar_uniformemente(imagen, 2)
+        self.assertEqual(nueva.shape, (8, 4, 3))
+
 
     ######################################################################
     def test_pegar_horizontalmente(self):

@@ -22,7 +22,7 @@ def aplanar_una(imagen):
     color) en un arreglo unidimensional
     """
     alto, ancho, canales = imagen.shape
-    vector = imagen.reshape(alto * ancho * canales)
+    vector = imagen.reshape(1, alto * ancho * canales)
     return vector
 
 
@@ -53,8 +53,10 @@ def redimensionar_uniformemente(imagen, razon):
     alto, ancho, canales = imagen.shape
     nuevo_alto = int(alto * razon)
     nuevo_ancho = int(ancho * razon)
-    imagen = cv2.resize(imagen, (nuevo_alto, nuevo_ancho), interpolation=cv2.INTER_LINEAR)
-    return imagen
+
+    nueva = cv2.resize(imagen, (nuevo_ancho, nuevo_alto), interpolation=cv2.INTER_LINEAR)
+
+    return nueva
 
 
 def pegar_horizontalmente(*imagenes):
@@ -63,11 +65,6 @@ def pegar_horizontalmente(*imagenes):
     nueva
     '''
     pegada = np.concatenate(imagenes, axis=1)
-    '''
-    for mat in matrices_imagenes:
-        log.debug(mat.shape)
-    log.debug(horizontal.shape)
-    '''
     return pegada
 
 

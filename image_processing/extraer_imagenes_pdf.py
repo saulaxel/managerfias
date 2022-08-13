@@ -24,6 +24,9 @@ def abrir_pdf(nombre_archivo: str) -> Pdf:
 
 
 def obtener_imagenes(archivo_pdf: Pdf) -> Iterable[Imagen]:
+    '''
+    Regresa un iterable con las imágenes contenidas en un archivo PDF
+    '''
     for i, pagina in enumerate(archivo_pdf):
         xrefs_imagenes = pagina.get_images()
         log.msg(f"Página {i}", nivel=log.DEBUG)
@@ -58,6 +61,12 @@ def procesar_pdf(nombre_archivo: str, ruta_salida: str) -> None:
         guardar_bytes(nombre_archivo=archivo_img, bytes_a_guardar=imagen.data)
 
 
+def extraer_imagenes_pdf(ruta_entrada, ruta_salida):
+    for nombre_archivo in glob(f'{ruta_entrada}/*.pdf'):
+        log.msg(f'Procesando: {nombre_archivo}', nivel=log.DEBUG)
+        procesar_pdf(nombre_archivo, ruta_salida)
+
+
 # Programa principal
 def main() -> None:
     ap = ArgumentParser()
@@ -71,10 +80,7 @@ def main() -> None:
     ruta_entrada = args['ruta_entrada']
     ruta_salida = args['ruta_salida']
 
-    for nombre_archivo in glob(f'{ruta_entrada}/*.pdf'):
-        log.msg(f'Procesando: {nombre_archivo}', nivel=DEBUG)
-        procesar_pdf(nombre_archivo, ruta_salida)
-
+    extraer_imagenes_pdf(ruta_entrada, ruta_salida)
 
 if __name__ == '__main__':
     main()

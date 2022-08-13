@@ -1,22 +1,13 @@
 """
-Algunas monografías se escanearon dos veces o más debido a pequeños errores.
-Este script tiene la finalidad de identificarlas.
+Las monografías pueden tener su contenido ordenado verticalmente u
+horizontalmente. Siempre queremos leerlo en la orientación correcta, pero todas
+las imágenes se escanearon en la misma posición lo que hace que algunas
+monografías requieran girarse para obtener dicha posición.
 
-Se va a usar una heurística sencilla para este fin:
-  * A partir de una muestra de imágenes ya separadas en frente y atrás, se
-    calcula la media de los niveles de promedios en ambas clases de imágenes.
-  * Se usa la diferencia entre medias para clasificar el resto de imágenes
-    en "de frente" y "detrás"
-  * Las imágenes con número par deberían ser del frente y las impares deben ser
-    la parte de atrás de una monografía. Si una imagen no concuerda con lo
-    esperado, es probable que se haya duplicado. Se mostrarán ambas versiones al
-    usuario para que elija la correcta.
+Este script permitirá entrenar un clasificador que determinará si una monografía
+se lee vertical u horizontalmente, de tal manera que se pueda girar la imagen a
+la posición adecuada
 """
-import os
-import os.path
-import numpy as np
-import shutil
-
 from glob import glob
 from argparse import ArgumentParser
 from imutils import paths

@@ -21,23 +21,12 @@ def cargar_recortar_y_guardar(nombre_archivo, ruta_archivo, ruta_salida):
     if imagen is None:
         raise EnvironmentError('No se pudo abrir la imagen')
 
-    imagen_cortada = imagenes.recortar(corte_vertical, corte_horizontal)
+    imagen_cortada = imagenes.recortar(imagen, corte_vertical, corte_horizontal)
 
-    imagen.guardar(f'{ruta_salida}/{nombre_archivo}', imagen_cortada)
+    imagenes.guardar(f'{ruta_salida}/{nombre_archivo}', imagen_cortada)
 
-# Programa principal
-def main():
-    ap = ArgumentParser()
-    ap.add_argument('-e', '--ruta-entrada',
-            default='../scanned_images/img')
-    ap.add_argument('-s', '--ruta-salida',
-            default='../scanned_images/img_cropped')
 
-    args = vars(ap.parse_args())
-
-    ruta_entrada = args['ruta_entrada']
-    ruta_salida = args['ruta_salida']
-
+def procesar_imagens_en_subdirectorios(ruta_entrada, ruta_salida):
     for raiz, directorios, archivos in os.walk(ruta_entrada):
         # Solo se toman en cuenta carpetas sin subdirectorios (el fondo
         # de la estructura de carpetas) para no tomar en cuenta la ruta que
@@ -59,6 +48,21 @@ def main():
                 cargar_recortar_y_guardar(nombre_archivo,
                                           ruta_archivo=raiz,
                                           ruta_salida=nuevo_dir)
+
+# Programa principal
+def main():
+    ap = ArgumentParser()
+    ap.add_argument('-e', '--ruta-entrada',
+            default='../scanned_images/img')
+    ap.add_argument('-s', '--ruta-salida',
+            default='../scanned_images/img_cropped')
+
+    args = vars(ap.parse_args())
+
+    ruta_entrada = args['ruta_entrada']
+    ruta_salida = args['ruta_salida']
+
+    procesar_imagens_en_subdirectorios(ruta_entrada, ruta_salida)
 
 if __name__ == '__main__':
     main()
