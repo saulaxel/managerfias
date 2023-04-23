@@ -39,5 +39,8 @@ module.exports = {
       ]
     }),
   ],
-  mode: 'development'
+  mode: 'development',
+  cache: {
+    type: 'filesystem'
+  }
 };

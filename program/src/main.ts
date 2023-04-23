@@ -1,4 +1,14 @@
-import { IMAGEN_TIPO } from './js_modules/enums_documentos'
+import {
+    SRC_TIPO_IMAGEN,
+    T_ALL,
+    T_MONOGRAFIA,
+    T_MAPA,
+    T_ESQUEMA,
+    T_CROMO,
+    T_BIOGRAFIA,
+    str_a_tipo_doc,
+    tipo_doc_a_str
+} from './js_modules/enums_documentos'
 import { baseDatosGrafias } from './js_modules/datos_documentos_clip'
 
 // Constantes
@@ -10,6 +20,17 @@ const ENTER            = 13;
 const ESCAPE           = 27;
 
 // Funciones auxiliares
+const obtenerRadioSeleccionado = function(radios: HTMLInputElement[]) {
+    for (let i = 0; i < radios.length; ++i) {
+        if (radios[i].checked) {
+            return radios[i].value;
+            break;
+        }
+
+    }
+    throw Error("Ningún elemento seleccionado en los botones radio");
+};
+
 const normalizarTexto = function(texto: string) {
   texto = texto.normalize("NFD"); // Transforma un carácter de acento en una primitiva + código unicode de diacrílico
   texto = texto.replace(/[\u0300-\u036f]/g, ""); // La línea anterior permite quitar acentos con una simple sustitución
@@ -20,15 +41,28 @@ const normalizarTexto = function(texto: string) {
   return texto;
 };
 
+const capitalizar = function(texto: string) {
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+};
+
 const divSugerencias = document.getElementById("sugerencias");
 const inputTexto = document.getElementById("texto") as HTMLInputElement;
 const divElegidas = document.getElementById("elegidas");
-if (divSugerencias == null || inputTexto == null || divElegidas == null ) {
+const radiosDoctype = (document.querySelectorAll("#doctype-selector label > input") as unknown) as HTMLInputElement[];
+const descSeleccionado = document.getElementById("desc-seleccionado");
+
+if (divSugerencias == null || inputTexto == null || divElegidas == null
+   || radiosDoctype == null || descSeleccionado == null) {
     throw new Error("No se han encontrado los contenedores en el html");
 }
 
 let listaDivs: any[] = [];
 let listaGrafias: any[] = [];
+
+const actualizardescSeleccionado = function() {
+    let tipo_doc = obtenerRadioSeleccionado(radiosDoctype);
+    descSeleccionado.innerText = capitalizar(tipo_doc);
+};
 
 // Creando la lista de sugerencias por primera vez
 (function() {
@@ -38,7 +72,7 @@ let listaGrafias: any[] = [];
 
     const divImagen = document.createElement("DIV");
     const imagen: HTMLImageElement = document.createElement("IMG") as HTMLImageElement;
-    const src: string = "img/" + IMAGEN_TIPO[grafia.tipo];
+    const src: string = "img/" + SRC_TIPO_IMAGEN[grafia.tipo];
 
     if (src === undefined) {
       throw Error("El tipo de ~grafia no tiene asignado una imagen");
@@ -65,8 +99,13 @@ let listaGrafias: any[] = [];
 
     divSugerencias.appendChild(divSugerencia);
 
-    listaGrafias.push(normalizarTexto(grafia.nombre));
+    listaGrafias.push(grafia);
     listaDivs.push(divSugerencia);
+  }
+
+  actualizardescSeleccionado();
+  for (let radio of radiosDoctype) {
+      radio.addEventListener('change', actualizardescSeleccionado);
   }
 })();
 
@@ -96,8 +135,8 @@ const resetearSugerencias = function() {
 const actualizarGrafias = function(evento?: Event) {
   const eventoTeclado: KeyboardEvent = evento as KeyboardEvent;
   const keyCode = eventoTeclado ? eventoTeclado.keyCode : 0;
-  console.log(eventoTeclado);
-  console.log(keyCode);
+  /* console.log(eventoTeclado); */
+  /* console.log(keyCode); */
 
   // Teclas especiales
   if (keyCode === ENTER || keyCode === FLECHA_IZQUIERDA || keyCode === FLECHA_DERECHA) {
@@ -136,17 +175,25 @@ const actualizarGrafias = function(evento?: Event) {
 
   // Calculamos y mostrando sugerencias
   const tokens = texto.split(" ");
+  const tipo_seleccionado = str_a_tipo_doc(obtenerRadioSeleccionado(radiosDoctype));
 
+  // Se requiere el índice, por lo que no se usa el for of
   for (let i = 0; i < listaGrafias.length; i++) {
-
     let grafia = listaGrafias[i];
-
+    let nombre_grafia = normalizarTexto(grafia.nombre);
     let valida = true;
-    for (let token of tokens) {
-      if (!grafia.includes(token)) {
+
+    // Checando el tipo
+    if (tipo_seleccionado !== T_ALL && tipo_seleccionado !== grafia.tipo) {
         valida = false;
-        break;
-      }
+    } else {
+        // Checando que tenga la palabra clave
+        for (let token of tokens) {
+            if (!nombre_grafia.includes(token)) {
+                valida = false;
+                break;
+            }
+        }
     }
 
     if (valida) {
@@ -170,7 +217,7 @@ const actualizarGrafias = function(evento?: Event) {
 inputTexto.addEventListener('keyup', actualizarGrafias);
 
 inputTexto.addEventListener('keydown', function(evento) {
-  console.log(evento);
+  /* console.log(evento); */
   if (evento.keyCode == FLECHA_ARRIBA) {
     evento.preventDefault();
     moverSeleccionArriba();

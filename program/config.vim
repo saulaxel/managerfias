@@ -1,4 +1,4 @@
-call CambiarIndentacion(2)
+lua CambiarIndentacion(2)
 
 augroup Config
     autocmd!

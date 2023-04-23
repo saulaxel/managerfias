@@ -22,6 +22,14 @@
 - Se añaden las palabras "Sugerencias" y "Elegidas" encima de las listas
 - Se coloca un borde alrededor de las listas del punto anterior
 
+## Version 0.2.2
+
+- Se centra el icono del botón de recarga calculando apropiadamente el alto de
+    línea
+- Filtrando elementos por tipo
+-
+
+
 ## Recolección de imágenes de las monografías
 
 - Sin cambios razonables en el código de la aplicación
@@ -30,6 +38,8 @@
 
 ## Cosas por hacer
 
+- Arreglar la carga de múltiples imágenes para los mismos iconos
+- Filtros por tipo de documento
 - Completar la lista digital.
 - Permitir cambiar entre listas para diferentes locales
 - Habilidad para eliminar elementos individuales de la lista de elecciones

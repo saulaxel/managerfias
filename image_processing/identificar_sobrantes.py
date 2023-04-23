@@ -3,10 +3,6 @@ Algunas monografías se escanearon dos veces o más debido a pequeños errores.
 Este script tiene la finalidad de identificarlas.
 
 Se va a usar una heurística sencilla para este fin:
-  * A partir de una muestra de imágenes ya separadas en frente y atrás, se
-    calcula la media de los niveles de promedios en ambas clases de imágenes.
-  * Se usa la diferencia entre medias para clasificar el resto de imágenes
-    en "de frente" y "detrás"
   * Las imágenes con número par deberían ser del frente y las impares deben ser
     la parte de atrás de una monografía. Si una imagen no concuerda con lo
     esperado, es probable que se haya duplicado. Se mostrarán ambas versiones al
@@ -34,9 +30,6 @@ from clasificadores import ClasificadorPromedio
 from pyimagesearch.datasets.cargador_simple_datos import CargadorSimpleDatos
 
 # Funcionalidad central
-
-corte_horizontal = slice(0, 1774)
-corte_vertical = slice(936, -1)
 
 class Eleccion(IntEnum):
     NINGUNA = 0
@@ -224,62 +217,22 @@ def eliminar_sobrantes_en_carpetas(cp: ClasificadorPromedio,
                 contador_imagen += 1
 
 
-def entrenar_clasificador(ruta_entrenamiento, archivo_salida):
-
-    # Carpetas dentro de la ruta de entrada, separados por clases
-    rutas_imagenes = list(paths.list_images(ruta_entrenamiento))
-
-    # Cargar datos de entrenamiento
-    (datos, etiquetas) = CargadorSimpleDatos().cargar(rutas_imagenes)
-
-    # Preparar los datos
-    datos = imagenes.aplanar_varias(datos)
-
-    # Particionar los datos usando 75% de los datos para entrenamiento y el restante
-    # 25% para pruebas
-    (trainX, testX, trainY, testY) = train_test_split(datos, etiquetas,
-            test_size=0.25)
-
-    print(f'{len(datos)=} {etiquetas=}')
-
-    cp = ClasificadorPromedio()
-    cp.entrenar(trainX, trainY)
-
-    print(cp.predecir(testX))
-    print(testY)
-
-    cp.guardar(archivo_salida)
-
 
 # Programa principal
 def main():
-    if not os.path.exists(ARCHIVO_CLASIFICADOR_FRENTE_ATRAS):
-        # Si no se han caracterizado los promedios de niveles de promedios
-        # para frente y atrás, se procede a hacerlo
-        ap = ArgumentParser()
-        ap.add_argument('-e', '--ruta-entrenamiento',
-                default='../scanned_images/train_front_back')
-        args = vars(ap.parse_args())
+    ap = ArgumentParser()
+    ap.add_argument('-e', '--ruta-entrada',
+            default='../scanned_images/img_cropped/')
+    ap.add_argument('-s', '--ruta-salida',
+            default='../scanned_images/img_no_repeated')
+    args = vars(ap.parse_args())
 
-        ruta_entrenamiento = args['ruta_entrenamiento']
+    cp = ClasificadorPromedio.cargar(ARCHIVO_CLASIFICADOR_FRENTE_ATRAS)
 
-        entrenar_clasificador(ruta_entrenamiento, ARCHIVO_CLASIFICADOR_FRENTE_ATRAS)
-    else:
-        # Ya está realizado el entrenamiento. Se procese a recorrer las
-        # imágenes
-        ap = ArgumentParser()
-        ap.add_argument('-e', '--ruta-entrada',
-                default='../scanned_images/img_cropped/')
-        ap.add_argument('-s', '--ruta-salida',
-                default='../scanned_images/img_no_repeated')
-        args = vars(ap.parse_args())
+    ruta_entrada = args['ruta_entrada']
+    ruta_salida = args['ruta_salida']
 
-        cp = ClasificadorPromedio.cargar(ARCHIVO_CLASIFICADOR_FRENTE_ATRAS)
-
-        ruta_entrada = args['ruta_entrada']
-        ruta_salida = args['ruta_salida']
-
-        eliminar_sobrantes_en_carpetas(cp, ruta_entrada, ruta_salida)
+    eliminar_sobrantes_en_carpetas(cp, ruta_entrada, ruta_salida)
 
 
 if __name__ == '__main__':
