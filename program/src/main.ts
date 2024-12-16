@@ -9,7 +9,7 @@ import {
     str_a_tipo_doc,
     tipo_doc_a_str
 } from './js_modules/enums_documentos'
-import { baseDatosGrafias } from './js_modules/datos_documentos_clip'
+import { baseDatosGrafias } from './js_modules/datos_documentos_posta'
 
 // Constantes
 const FLECHA_ARRIBA    = 38;

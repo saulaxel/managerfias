@@ -35,4 +35,4 @@ for letra in alfabeto:
         clave += sanear_datos(row.letra)
         clave += sanear_datos(row.orden)
 
-        print(f'[BIOGRAFIA, "{clave}", "{nombre}"],')
+        print(f'new Grafia(T_BIOGRAFIA, "{clave}", "{nombre}"),')

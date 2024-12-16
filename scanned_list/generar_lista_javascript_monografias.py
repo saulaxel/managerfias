@@ -27,8 +27,10 @@ for letra in alfabeto:
 
         clave = letra
         clave += sanear_datos(row.codigo)
-        clave += sanear_datos(row.letra)
-        clave += sanear_datos(row.orden)
+
+        sufijo = sanear_datos(row.letra) + sanear_datos(row.orden)
+        if sufijo:
+            clave += f'-{sufijo}'
 
 
-        print(f'[MONOGRAFIA, "{clave}", "{nombre}"],')
+        print(f'new Grafia(T_MONOGRAFIA, "{clave}", "{nombre}"),')
