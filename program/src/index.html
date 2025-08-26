@@ -7,6 +7,13 @@
     %>" >
     <title><%= htmlWebpackPlugin.options.title %></title>
 
+    <link rel="icon" type="image/png" href="/img/icons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/img/icons/favicon.svg" />
+    <link rel="shortcut icon" href="/img/icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Grafias" />
+    <link rel="manifest" href="/img/icons/site.webmanifest" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         input[type="search"]::-webkit-search-decoration,
@@ -151,8 +158,8 @@
 
         <div class="row m-2">
             <div class="center">
-                <button type="button" class="btn btn-primary" onclick="aniadir()">Añadir</button>
-                <button type="button" class="btn btn-secondary boton-resetear" onclick="resetearElegidas()">
+                <button type="button" class="btn btn-primary" onclick="MyLibrary.aniadir()">Añadir</button>
+                <button type="button" class="btn btn-secondary boton-resetear" onclick="MyLibrary.resetearElegidas()">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </button>
             </div>
@@ -191,5 +198,15 @@
         </div>
 
     </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register("service_worker.js")
+                    .then(reg => console.log('Service worker registered.', reg))
+                    .catch(err => console.error('Service worker registration failed', err));
+            });
+        }
+    </script>
 </body>
 </html>

@@ -22,6 +22,8 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'MyLibrary',
+    libraryTarget: 'window',
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -35,7 +37,9 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        { from: './src/img', to: 'img' }
+        { from: './src/img', to: 'img' },
+        { from: './src/img/icons', to: 'img/icons' },
+        { from: './src/service_workers/', to: '' },
       ]
     }),
   ],

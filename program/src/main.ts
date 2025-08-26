@@ -47,7 +47,8 @@ const capitalizar = function(texto: string) {
 
 const divSugerencias = document.getElementById("sugerencias");
 const inputTexto = document.getElementById("texto") as HTMLInputElement;
-const divElegidas = document.getElementById("elegidas");
+const divElegidas = document.getElementById("elegidas")!;
+
 const radiosDoctype = (document.querySelectorAll("#doctype-selector label > input") as unknown) as HTMLInputElement[];
 const descSeleccionado = document.getElementById("desc-seleccionado");
 
@@ -126,6 +127,7 @@ const pintarComoNoSeleccionada = function(div: HTMLElement) {
 
 const resetearSugerencias = function() {
   listaSugerencias = [];
+  indiceSeleccionado = 0;
   for (let i = 0; i < listaGrafias.length; i++) {
     listaDivs[i].style.display = "none";
     pintarComoNoSeleccionada(listaDivs[i]);
@@ -237,11 +239,10 @@ const borrarTexto = function() {
   actualizarGrafias();
 };
 
-const aniadir = function(indiceNodo?: number) {
-  const indice = indiceNodo ?? 0;
+function aniadir() {
   if (listaSugerencias.length > 0) {
-    indiceNodo = listaSugerencias[indiceSeleccionado];
-    const divEleccion = listaDivs[indice].cloneNode(true);
+    const indiceNodo = listaSugerencias[indiceSeleccionado];
+    const divEleccion = listaDivs[indiceNodo].cloneNode(true);
 
     pintarComoSeleccionada(divEleccion);
 
@@ -310,5 +311,4 @@ const seleccionarEnesimo = function(n: Number) {
 
 // Se ejecuta una vez la actualización
 actualizarGrafias();
-
-export { aniadir };
+export { aniadir, resetearElegidas }

@@ -27,8 +27,13 @@
 - Se centra el icono del botón de recarga calculando apropiadamente el alto de
     línea
 - Filtrando elementos por tipo
--
 
+## Version 0.2.3
+
+- Webpack agregado. Se hacen los arreglos apropiados a la exportación y al
+    ámbito de las funciones afectadas
+- Se añade Favicon y manifest para convertir la app en una PWA
+- Corregir un bug que impedía añadir elementos diferentes a monografías
 
 ## Recolección de imágenes de las monografías
 
