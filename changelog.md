@@ -35,6 +35,16 @@
 - Se añade Favicon y manifest para convertir la app en una PWA
 - Corregir un bug que impedía añadir elementos diferentes a monografías
 
+## Version 0.2.4
+- Se separa el manejo de eventos y la actualización de la lista de sugerencias
+- Se arregla la actualización tras elegir un filtro de documento distinto
+- Se encuentra bug que impedía actualización cuando se borraba y volvía a
+    escribir el mismo texto repetidas veces.
+- Se encuentra bug que prevenía actualización cuando se borra el texto de
+    búsqueda presionando el botón de ESCAPE.
+- Reestructuración del index para que las monografías que elegiste aparezcan antes de las sugerencias.
+- Corrección de algunos datos en la letra A de la base de datos
+
 ## Recolección de imágenes de las monografías
 
 - Sin cambios razonables en el código de la aplicación
@@ -44,8 +54,6 @@
 ## Cosas por hacer
 
 - Arreglar la carga de múltiples imágenes para los mismos iconos
-- Filtros por tipo de documento
-- Completar la lista digital.
 - Permitir cambiar entre listas para diferentes locales
 - Habilidad para eliminar elementos individuales de la lista de elecciones
 - Cuenta de usuarios

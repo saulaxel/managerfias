@@ -45,12 +45,12 @@ const capitalizar = function(texto: string) {
     return texto.charAt(0).toUpperCase() + texto.slice(1);
 };
 
-const divSugerencias = document.getElementById("sugerencias");
+const divSugerencias = document.getElementById("sugerencias")!;
 const inputTexto = document.getElementById("texto") as HTMLInputElement;
 const divElegidas = document.getElementById("elegidas")!;
 
 const radiosDoctype = (document.querySelectorAll("#doctype-selector label > input") as unknown) as HTMLInputElement[];
-const descSeleccionado = document.getElementById("desc-seleccionado");
+const descSeleccionado = document.getElementById("desc-seleccionado")!;
 
 if (divSugerencias == null || inputTexto == null || divElegidas == null
    || radiosDoctype == null || descSeleccionado == null) {
@@ -60,9 +60,14 @@ if (divSugerencias == null || inputTexto == null || divElegidas == null
 let listaDivs: any[] = [];
 let listaGrafias: any[] = [];
 
-const actualizardescSeleccionado = function() {
+const actualizarDescripcionSeleccionado = function() {
     let tipo_doc = obtenerRadioSeleccionado(radiosDoctype);
     descSeleccionado.innerText = capitalizar(tipo_doc);
+};
+
+const actualizarDoctype = function() {
+    actualizarDescripcionSeleccionado();
+    actualizarSugerencias(previousText);
 };
 
 // Creando la lista de sugerencias por primera vez
@@ -104,9 +109,9 @@ const actualizardescSeleccionado = function() {
     listaDivs.push(divSugerencia);
   }
 
-  actualizardescSeleccionado();
+  actualizarDescripcionSeleccionado();
   for (let radio of radiosDoctype) {
-      radio.addEventListener('change', actualizardescSeleccionado);
+      radio.addEventListener('change', actualizarDoctype);
   }
 })();
 
@@ -125,7 +130,7 @@ const pintarComoNoSeleccionada = function(div: HTMLElement) {
   div.classList.add("bg-info");
 }
 
-const resetearSugerencias = function() {
+const limpiarSugerencias = function() {
   listaSugerencias = [];
   indiceSeleccionado = 0;
   for (let i = 0; i < listaGrafias.length; i++) {
@@ -134,7 +139,7 @@ const resetearSugerencias = function() {
   }
 }
 
-const actualizarGrafias = function(evento?: Event) {
+const manejarEventosTeclado = function(evento?: Event) {
   const eventoTeclado: KeyboardEvent = evento as KeyboardEvent;
   const keyCode = eventoTeclado ? eventoTeclado.keyCode : 0;
   /* console.log(eventoTeclado); */
@@ -147,7 +152,8 @@ const actualizarGrafias = function(evento?: Event) {
   }
 
   if (keyCode == ESCAPE) {
-    borrarTexto();
+    previousText = "";
+    vaciarBusqueda();
     return;
   }
 
@@ -164,19 +170,41 @@ const actualizarGrafias = function(evento?: Event) {
   const texto = normalizarTexto(inputTexto.value);
 
   if (texto === previousText) {
+    // No hay nada que hacer si el texto no ha cambiado
+    return;
+  }
+  actualizarSugerencias(texto);
+};
+inputTexto.addEventListener('keyup', manejarEventosTeclado);
+
+inputTexto.addEventListener('keydown', function(evento) {
+  /* console.log(evento); */
+  if (evento.keyCode == FLECHA_ARRIBA) {
+    evento.preventDefault();
+    moverSeleccionArriba();
     return;
   }
 
-  resetearSugerencias();
+  if (evento.keyCode == FLECHA_ABAJO) {
+    evento.preventDefault();
+    moverSeleccionAbajo();
+    return;
+  }
+});
 
-  if (texto === "") {
+const actualizarSugerencias = function(textoFiltro: string) {
+
+  limpiarSugerencias();
+
+  if (textoFiltro === "") {
     // Esta condición va después de resetear sugerencias para que la cadena vacía no
     // muestre sugerencia alguna
+    previousText = "";
     return;
   }
 
   // Calculamos y mostrando sugerencias
-  const tokens = texto.split(" ");
+  const tokens = textoFiltro.split(" ");
   const tipo_seleccionado = str_a_tipo_doc(obtenerRadioSeleccionado(radiosDoctype));
 
   // Se requiere el índice, por lo que no se usa el for of
@@ -214,32 +242,16 @@ const actualizarGrafias = function(evento?: Event) {
   }
 
   // Caché
-  previousText = texto;
-};
-inputTexto.addEventListener('keyup', actualizarGrafias);
+  previousText = textoFiltro;
+}
 
-inputTexto.addEventListener('keydown', function(evento) {
-  /* console.log(evento); */
-  if (evento.keyCode == FLECHA_ARRIBA) {
-    evento.preventDefault();
-    moverSeleccionArriba();
-    return;
-  }
-
-  if (evento.keyCode == FLECHA_ABAJO) {
-    evento.preventDefault();
-    moverSeleccionAbajo();
-    return;
-  }
-});
-
-const borrarTexto = function() {
+const vaciarBusqueda = function() {
   previousText = "";
   inputTexto.value = "";
-  actualizarGrafias();
+  actualizarSugerencias("");
 };
 
-function aniadir() {
+const aniadir = function() {
   if (listaSugerencias.length > 0) {
     const indiceNodo = listaSugerencias[indiceSeleccionado];
     const divEleccion = listaDivs[indiceNodo].cloneNode(true);
@@ -310,5 +322,5 @@ const seleccionarEnesimo = function(n: Number) {
 }
 
 // Se ejecuta una vez la actualización
-actualizarGrafias();
+actualizarSugerencias("");
 export { aniadir, resetearElegidas }
