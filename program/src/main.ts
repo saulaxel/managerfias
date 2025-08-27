@@ -139,6 +139,7 @@ const limpiarSugerencias = function() {
   }
 }
 
+let keyEventTriggered = false;
 const manejarEventosTeclado = function(evento?: Event) {
   const eventoTeclado: KeyboardEvent = evento as KeyboardEvent;
   const keyCode = eventoTeclado ? eventoTeclado.keyCode : 0;
@@ -152,7 +153,6 @@ const manejarEventosTeclado = function(evento?: Event) {
   }
 
   if (keyCode == ESCAPE) {
-    previousText = "";
     vaciarBusqueda();
     return;
   }
@@ -166,19 +166,12 @@ const manejarEventosTeclado = function(evento?: Event) {
     return;
   }
 
-  // Con el fin de evitar cálculos innecesarios
-  const texto = normalizarTexto(inputTexto.value);
-
-  if (texto === previousText) {
-    // No hay nada que hacer si el texto no ha cambiado
-    return;
-  }
-  actualizarSugerencias(texto);
+  actualizarSugerenciasSiHayCamnios();
 };
 inputTexto.addEventListener('keyup', manejarEventosTeclado);
 
 inputTexto.addEventListener('keydown', function(evento) {
-  /* console.log(evento); */
+  keyEventTriggered = true;
   if (evento.keyCode == FLECHA_ARRIBA) {
     evento.preventDefault();
     moverSeleccionArriba();
@@ -190,6 +183,18 @@ inputTexto.addEventListener('keydown', function(evento) {
     moverSeleccionAbajo();
     return;
   }
+});
+
+inputTexto.addEventListener('input', function() {
+    if (keyEventTriggered) {
+        // Prevents double handling of key pressed.
+        keyEventTriggered = false;
+        return;
+    }
+
+    // Solo cuando un cambio del texto fue realizado sin presionar una tecla,
+    // esta actualización de las sugerencias toma efecto.
+    actualizarSugerenciasSiHayCamnios();
 });
 
 const actualizarSugerencias = function(textoFiltro: string) {
@@ -243,6 +248,18 @@ const actualizarSugerencias = function(textoFiltro: string) {
 
   // Caché
   previousText = textoFiltro;
+}
+
+const actualizarSugerenciasSiHayCamnios = function() {
+  // Con el fin de evitar cálculos innecesarios, se normaliza el texto para
+  // hacerlo fácilmente comparable incluso con acentos, mayúsculas y minúsculas
+  const texto = normalizarTexto(inputTexto.value);
+
+  if (texto === previousText) {
+    // No hay nada que hacer si el texto no ha cambiado
+    return;
+  }
+  actualizarSugerencias(texto);
 }
 
 const vaciarBusqueda = function() {

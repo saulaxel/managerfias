@@ -45,6 +45,11 @@
 - Reestructuración del index para que las monografías que elegiste aparezcan antes de las sugerencias.
 - Corrección de algunos datos en la letra A de la base de datos
 
+## version 0.2.5
+- Se corrige actualización cuando se borra el texto de búsqueda mediante el
+    tache provisto por chrome.
+- Se coloca un borde en el input de búsqueda para facilitar su visualización
+
 ## Recolección de imágenes de las monografías
 
 - Sin cambios razonables en el código de la aplicación
