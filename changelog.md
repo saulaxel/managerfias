@@ -50,6 +50,10 @@
     tache provisto por chrome.
 - Se coloca un borde en el input de búsqueda para facilitar su visualización
 
+## version 0.2.6
+- Se sustituyó la carga de múltiples imágenes para los mismos iconos por
+    elementos estilizados por css con la imagen de fondo deseada.
+
 ## Recolección de imágenes de las monografías
 
 - Sin cambios razonables en el código de la aplicación
@@ -58,7 +62,6 @@
 
 ## Cosas por hacer
 
-- Arreglar la carga de múltiples imágenes para los mismos iconos
 - Permitir cambiar entre listas para diferentes locales
 - Habilidad para eliminar elementos individuales de la lista de elecciones
 - Cuenta de usuarios

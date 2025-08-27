@@ -77,16 +77,9 @@ const actualizarDoctype = function() {
     const divSugerencia = document.createElement("DIV");
 
     const divImagen = document.createElement("DIV");
-    const imagen: HTMLImageElement = document.createElement("IMG") as HTMLImageElement;
-    const src: string = "img/" + SRC_TIPO_IMAGEN[grafia.tipo];
+    const cls: string = "icon-" + tipo_doc_a_str(grafia.tipo);
+    divImagen.classList.add(cls);
 
-    if (src === undefined) {
-      throw Error("El tipo de ~grafia no tiene asignado una imagen");
-    }
-    imagen.src = src;
-    divImagen.style.paddingRight = "10px";
-
-    divImagen.appendChild(imagen);
     divSugerencia.appendChild(divImagen);
 
     const textoSugerencia = document.createTextNode(grafia.clave + " " + grafia.nombre);
