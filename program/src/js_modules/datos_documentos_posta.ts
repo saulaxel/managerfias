@@ -1,4 +1,4 @@
-import { T_MONOGRAFIA, T_MAPA, T_ESQUEMA, T_CROMO, T_BIOGRAFIA } from './enums_documentos'
+import { T_MONOGRAFIA, T_MAPA, T_ESQUEMA, T_CROMO, T_BIOGRAFIA, T_RELIEVE } from './enums_documentos'
 
 class Grafia {
     public tipo: number;

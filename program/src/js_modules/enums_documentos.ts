@@ -6,6 +6,7 @@ export const T_MAPA       = 1;
 export const T_ESQUEMA    = 2;
 export const T_CROMO      = 3;
 export const T_BIOGRAFIA  = 4;
+export const T_RELIEVE    = 5;
 
 // Imágenes correspondientes a cada tipo. Su orden se tiene que corresponder con las constantes anteriores
 interface NombreImagen {
@@ -19,6 +20,7 @@ SRC_TIPO_IMAGEN[T_MAPA]       = "mapa.jpg";
 SRC_TIPO_IMAGEN[T_ESQUEMA]    = "esquema.jpg";
 SRC_TIPO_IMAGEN[T_CROMO]      = "cromo.jpg";
 SRC_TIPO_IMAGEN[T_BIOGRAFIA]  = "biografia.jpg";
+SRC_TIPO_IMAGEN[T_RELIEVE]    = "relieve.jpg";
 
 
 let tipo_doc_a_str = function(tipo: number) {
